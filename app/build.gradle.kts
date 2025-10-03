@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    id("kotlin-kapt")
 }
 
 android {
@@ -58,4 +60,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     //splash screen
     implementation(libs.androidx.core.splashscreen)
+    //livedata observer
+    implementation(libs.androidx.runtime.livedata)
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    //hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    //navigation compose
+    implementation(libs.androidx.navigation.compose)
+    //navigation hilt
+    implementation(libs.androidx.hilt.navigation.compose)
 }
