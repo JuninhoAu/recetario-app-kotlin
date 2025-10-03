@@ -72,4 +72,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     //navigation hilt
     implementation(libs.androidx.hilt.navigation.compose)
+    //datastore
+    implementation(libs.androidx.datastore.preferences)
+
 }

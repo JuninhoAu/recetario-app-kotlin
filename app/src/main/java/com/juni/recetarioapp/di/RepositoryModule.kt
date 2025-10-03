@@ -1,6 +1,8 @@
 package com.juni.recetarioapp.di
 
+import com.juni.recetarioapp.data.repository.OnboardingRepositoryImpl
 import com.juni.recetarioapp.data.repository.RecipeListRepositoryImpl
+import com.juni.recetarioapp.domain.repository.OnboardingRepository
 import com.juni.recetarioapp.domain.repository.RecipeListRepository
 import dagger.Binds
 import dagger.Module
@@ -14,4 +16,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun getRecipeListRepository(impl: RecipeListRepositoryImpl): RecipeListRepository
+
+    @Binds
+    @Singleton
+    abstract fun getOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
 }

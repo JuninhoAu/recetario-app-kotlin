@@ -4,6 +4,9 @@ import android.net.Uri
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -14,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
 import com.juni.recetarioapp.data.network.RecipeResponse
+import com.juni.recetarioapp.view.OnboardingViewModel
 import com.juni.recetarioapp.view.RecipeItemDetailScreen
 import com.juni.recetarioapp.view.RecipeListScreen
 import com.juni.recetarioapp.view.RecipeListViewModel
@@ -23,6 +27,15 @@ fun RecipeListNav(navHostController: NavHostController = rememberNavController()
     NavHost(navController = navHostController, startDestination = "recipeListScreen") {
         composable(route = "recipeListScreen") { backStackEntry ->
             val viewModel: RecipeListViewModel = hiltViewModel()
+            val onboardingViewModel: OnboardingViewModel = hiltViewModel()
+
+            val completed by onboardingViewModel.onboardingCompleted.collectAsState(initial = false)
+            LaunchedEffect(completed) {
+                if (completed) {
+                }
+            }
+            onboardingViewModel.completeOnboarding()
+
             Scaffold { innerPadding ->
                 RecipeListScreen(
                     viewModel = viewModel,
