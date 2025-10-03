@@ -17,25 +17,36 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
 import com.juni.recetarioapp.data.network.RecipeResponse
+import com.juni.recetarioapp.view.OnboardingScreen
 import com.juni.recetarioapp.view.OnboardingViewModel
 import com.juni.recetarioapp.view.RecipeItemDetailScreen
 import com.juni.recetarioapp.view.RecipeListScreen
 import com.juni.recetarioapp.view.RecipeListViewModel
 
 @Composable
-fun RecipeListNav(navHostController: NavHostController = rememberNavController()) {
-    NavHost(navController = navHostController, startDestination = "recipeListScreen") {
-        composable(route = "recipeListScreen") { backStackEntry ->
-            val viewModel: RecipeListViewModel = hiltViewModel()
-            val onboardingViewModel: OnboardingViewModel = hiltViewModel()
-
-            val completed by onboardingViewModel.onboardingCompleted.collectAsState(initial = false)
-            LaunchedEffect(completed) {
-                if (completed) {
+fun RecipeListNav(
+    onboardingViewModel: OnboardingViewModel,
+    navHostController: NavHostController = rememberNavController()
+) {
+    if (onboardingViewModel.isLoadingSplash.value) {
+        return
+    }
+    val starNavigation =
+        if (onboardingViewModel.shouldShowOnboarding.value) "onboarding" else "recipeListScreen"
+    NavHost(
+        navController = navHostController,
+        startDestination = starNavigation
+    ) {
+        composable(route = "onboarding") {
+            OnboardingScreen {
+                navHostController.navigate("recipeListScreen") {
+                    onboardingViewModel.completeOnboarding()
+                    popUpTo("onboarding") { inclusive = true }
                 }
             }
-            onboardingViewModel.completeOnboarding()
-
+        }
+        composable(route = "recipeListScreen") { backStackEntry ->
+            val viewModel: RecipeListViewModel = hiltViewModel()
             Scaffold { innerPadding ->
                 RecipeListScreen(
                     viewModel = viewModel,
