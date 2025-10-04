@@ -1,6 +1,6 @@
 package com.juni.recetarioapp.di
 
-import com.juni.recetarioapp.data.network.RecipeListClient
+import com.juni.recetarioapp.data.network.api.RecipeListClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

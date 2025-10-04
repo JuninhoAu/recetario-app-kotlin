@@ -1,7 +1,7 @@
 package com.juni.recetarioapp.data.mapper
 
 import com.juni.recetarioapp.data.local.database.RecipeEntity
-import com.juni.recetarioapp.data.network.RecipeResponse
+import com.juni.recetarioapp.data.network.model.RecipeResponse
 import com.juni.recetarioapp.domain.model.Recipe
 
 fun RecipeResponse.toEntity(): RecipeEntity {

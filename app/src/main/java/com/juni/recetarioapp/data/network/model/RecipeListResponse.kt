@@ -1,4 +1,4 @@
-package com.juni.recetarioapp.data.network
+package com.juni.recetarioapp.data.network.model
 
 data class RecipeListResponse(
     val recipeList: List<RecipeResponse>

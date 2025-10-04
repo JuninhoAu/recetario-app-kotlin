@@ -1,5 +1,9 @@
 package com.juni.recetarioapp.di
 
+import com.juni.recetarioapp.data.local.datasource.RecipeLocalDataSource
+import com.juni.recetarioapp.data.local.datasource.RecipeLocalDataSourceImpl
+import com.juni.recetarioapp.data.network.datasource.RecipeRemoteDataSource
+import com.juni.recetarioapp.data.network.datasource.RecipeRemoteDataSourceImpl
 import com.juni.recetarioapp.data.repository.OnboardingRepositoryImpl
 import com.juni.recetarioapp.data.repository.UpdateRecipeRepositoryImpl
 import com.juni.recetarioapp.data.repository.GetRecipeListRepositoryImpl
@@ -26,4 +30,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun getUpdateRecipeRepository(impl: UpdateRecipeRepositoryImpl): UpdateRecipeRepository
+
+    @Binds
+    @Singleton
+    abstract fun getRecipeRemoteDataSource(impl: RecipeRemoteDataSourceImpl): RecipeRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun getRecipeLocalDataSource(impl: RecipeLocalDataSourceImpl): RecipeLocalDataSource
 }
