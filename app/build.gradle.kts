@@ -78,5 +78,9 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
+    //coil
+    implementation(libs.coil.network)
+    implementation(libs.coil.compose)
+
 
 }

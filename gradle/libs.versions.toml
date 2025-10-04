@@ -17,6 +17,8 @@ hiltNavigationCompose = "1.2.0"
 navigationCompose = "2.8.0"
 datastorePreferences = "1.0.0"
 room = "2.6.1"
+coilCompose = "3.0.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +47,9 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

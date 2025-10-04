@@ -1,6 +1,5 @@
 package com.juni.recetarioapp.view.recipeitemlist
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,11 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
@@ -26,8 +26,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import com.juni.recetarioapp.R
 import com.juni.recetarioapp.view.model.RecipeModel
+
 
 @Composable
 fun RecipeListScreen(
@@ -100,6 +108,7 @@ private fun RecipeListLazyColumn(
                 recipeName = recipe.nombre,
                 recipeDescription = recipe.descripcion,
                 isFavoriteRecipe = recipe.favorito,
+                imageUrl = recipe.imagen,
                 onFavClick = { listViewModel.addRecipeItemToFav(recipe) }
             ) {
                 onItemClick(recipe)
@@ -113,6 +122,7 @@ private fun CardRecipeItem(
     recipeName: String,
     recipeDescription: String,
     isFavoriteRecipe: Boolean,
+    imageUrl: String,
     onFavClick: () -> Unit,
     onCardClick: () -> Unit
 ) {
@@ -128,7 +138,7 @@ private fun CardRecipeItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Icon(imageVector = Icons.Default.AccountBox, contentDescription = "image recipe")
+            ShowImage(imageUrl)
             Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -148,4 +158,22 @@ private fun CardRecipeItem(
             }
         }
     }
+}
+
+@Composable
+private fun ShowImage(imageUrl: String) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .crossfade(true)
+            .build(),
+        modifier = Modifier
+            .width(54.dp)
+            .height(54.dp),
+        contentScale = ContentScale.Crop,
+        placeholder = painterResource(R.drawable.ic_launcher_background),
+        error = painterResource(R.drawable.ic_launcher_background),
+        contentDescription = "Image item list"
+    )
+
 }
