@@ -4,9 +4,6 @@ import android.net.Uri
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -16,12 +13,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
-import com.juni.recetarioapp.data.network.RecipeResponse
 import com.juni.recetarioapp.view.OnboardingScreen
 import com.juni.recetarioapp.view.OnboardingViewModel
 import com.juni.recetarioapp.view.RecipeItemDetailScreen
 import com.juni.recetarioapp.view.RecipeListScreen
 import com.juni.recetarioapp.view.RecipeListViewModel
+import com.juni.recetarioapp.view.model.RecipeModel
 
 @Composable
 fun RecipeListNav(
@@ -66,7 +63,7 @@ fun RecipeListNav(
         ) { backStackEntry ->
             val item = backStackEntry.arguments?.getString("encodedItem").orEmpty()
             val recipe =
-                runCatching { Gson().fromJson(item, RecipeResponse::class.java) }.getOrNull()
+                runCatching { Gson().fromJson(item, RecipeModel::class.java) }.getOrNull()
             Scaffold { innerPadding ->
                 recipe?.let {
                     RecipeItemDetailScreen(

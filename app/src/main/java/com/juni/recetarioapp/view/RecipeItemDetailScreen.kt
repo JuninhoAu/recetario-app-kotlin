@@ -19,10 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.juni.recetarioapp.data.network.RecipeResponse
+import com.juni.recetarioapp.view.model.RecipeModel
 
 @Composable
-fun RecipeItemDetailScreen(modifier: Modifier, recipe: RecipeResponse) {
+fun RecipeItemDetailScreen(modifier: Modifier, recipe: RecipeModel) {
 
     Box(
         modifier = modifier
