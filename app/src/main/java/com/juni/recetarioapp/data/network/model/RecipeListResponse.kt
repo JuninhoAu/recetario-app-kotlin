@@ -5,6 +5,7 @@ data class RecipeListResponse(
 )
 
 data class RecipeResponse(
+    val id: String,
     val nombre: String,
     val imagen: String,
     val ingredientes: List<String>,

@@ -2,6 +2,7 @@ package com.juni.recetarioapp.data.local.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes ORDER BY favorito DESC, nombre ASC")
     fun getAllRecipes(): Flow<List<RecipeEntity>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipe(recipe: RecipeEntity)
 
     @Update

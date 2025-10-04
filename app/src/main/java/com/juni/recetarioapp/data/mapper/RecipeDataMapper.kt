@@ -6,6 +6,7 @@ import com.juni.recetarioapp.domain.model.Recipe
 
 fun RecipeResponse.toEntity(): RecipeEntity {
     return RecipeEntity(
+        id = this.id,
         nombre = this.nombre,
         imagen = this.imagen,
         descripcion = this.descripcion,

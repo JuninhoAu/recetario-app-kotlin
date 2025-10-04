@@ -1,7 +1,7 @@
 package com.juni.recetarioapp.view.model
 
 data class RecipeModel(
-    val id: Int,
+    val id: String,
     val nombre: String,
     val imagen: String,
     val descripcion: String,
