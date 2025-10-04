@@ -1,11 +1,11 @@
 package com.juni.recetarioapp.di
 
 import com.juni.recetarioapp.data.repository.OnboardingRepositoryImpl
-import com.juni.recetarioapp.data.repository.RecipeBdRepositoryImpl
-import com.juni.recetarioapp.data.repository.RecipeListRepositoryImpl
+import com.juni.recetarioapp.data.repository.UpdateRecipeRepositoryImpl
+import com.juni.recetarioapp.data.repository.GetRecipeListRepositoryImpl
 import com.juni.recetarioapp.domain.repository.OnboardingRepository
-import com.juni.recetarioapp.domain.repository.RecipeBdRepository
-import com.juni.recetarioapp.domain.repository.RecipeListRepository
+import com.juni.recetarioapp.domain.repository.UpdateRecipeRepository
+import com.juni.recetarioapp.domain.repository.GetRecipeListRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun getRecipeListRepository(impl: RecipeListRepositoryImpl): RecipeListRepository
+    abstract fun getRecipeListRepository(impl: GetRecipeListRepositoryImpl): GetRecipeListRepository
 
     @Binds
     @Singleton
@@ -25,5 +25,5 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun getRecipeBdRepository(impl: RecipeBdRepositoryImpl): RecipeBdRepository
+    abstract fun getUpdateRecipeRepository(impl: UpdateRecipeRepositoryImpl): UpdateRecipeRepository
 }

@@ -21,36 +21,37 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.juni.recetarioapp.data.network.RecipeResponse
+import com.juni.recetarioapp.view.model.RecipeModel
 
 @Composable
 fun RecipeListScreen(
     viewModel: RecipeListViewModel,
     modifier: Modifier = Modifier,
-    returnRecipeItem: (RecipeResponse) -> Unit
+    returnRecipeItem: (RecipeModel) -> Unit
 ) {
-    val recipeList by viewModel.recipeList.observeAsState(RecipeListState.Idle)
+    val recipeList by viewModel.getRecipeList.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.showRecipeList()
     }
     Box(modifier = modifier.fillMaxSize()) {
-        EvaluateStateList(listState = recipeList, returnRecipeItem = returnRecipeItem)
+        EvaluateStateList(listState = recipeList, listViewModel = viewModel) {
+            returnRecipeItem(it)
+        }
     }
 }
 
 @Composable
 private fun EvaluateStateList(
     listState: RecipeListState,
-    returnRecipeItem: (RecipeResponse) -> Unit
+    listViewModel: RecipeListViewModel,
+    returnRecipeItem: (RecipeModel) -> Unit
 ) {
     when (listState) {
 
@@ -69,7 +70,11 @@ private fun EvaluateStateList(
         }
 
         is RecipeListState.Success -> {
-            RecipeListLazyColumn(recipeList = listState.recipe, returnRecipeItem)
+            RecipeListLazyColumn(
+                recipeList = listState.recipeList,
+                listViewModel = listViewModel,
+                onItemClick = returnRecipeItem
+            )
         }
 
         is RecipeListState.Error -> {
@@ -81,8 +86,9 @@ private fun EvaluateStateList(
 
 @Composable
 private fun RecipeListLazyColumn(
-    recipeList: List<RecipeResponse>,
-    returnRecipeItem: (RecipeResponse) -> Unit
+    recipeList: List<RecipeModel>,
+    listViewModel: RecipeListViewModel,
+    onItemClick: (RecipeModel) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -92,20 +98,32 @@ private fun RecipeListLazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(recipeList) { recipe ->
-            CardRecipeItem(recipe = recipe, returnRecipeItem)
+            CardRecipeItem(
+                recipeName = recipe.nombre,
+                recipeDescription = recipe.descripcion,
+                isFavoriteRecipe = recipe.favorito,
+                onFavClick = { listViewModel.addRecipeItemToFav(recipe) }
+            ) {
+                onItemClick(recipe)
+            }
         }
     }
 }
 
 @Composable
-private fun CardRecipeItem(recipe: RecipeResponse, returnRecipeItem: (RecipeResponse) -> Unit) {
-    var isRecipeItemFavorite by rememberSaveable { mutableStateOf(false) }
+private fun CardRecipeItem(
+    recipeName: String,
+    recipeDescription: String,
+    isFavoriteRecipe: Boolean,
+    onFavClick: () -> Unit,
+    onCardClick: () -> Unit
+) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                returnRecipeItem(recipe)
+                onCardClick()
             }) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -118,17 +136,17 @@ private fun CardRecipeItem(recipe: RecipeResponse, returnRecipeItem: (RecipeResp
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = recipe.nombre, modifier = Modifier.weight(1f))
+                    Text(text = recipeName, modifier = Modifier.weight(1f))
                     Icon(
-                        imageVector = if (isRecipeItemFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                        tint = if (isRecipeItemFavorite) Color.Red else Color.Gray,
-                        contentDescription = if (isRecipeItemFavorite) "favorite" else "no favorite",
+                        imageVector = if (isFavoriteRecipe) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                        tint = if (isFavoriteRecipe) Color.Red else Color.Gray,
+                        contentDescription = if (isFavoriteRecipe) "favorite" else "no favorite",
                         modifier = Modifier.clickable {
-                            isRecipeItemFavorite = !isRecipeItemFavorite
+                            onFavClick()
                         }
                     )
                 }
-                Text(text = recipe.descripcion)
+                Text(text = recipeDescription)
             }
         }
     }
