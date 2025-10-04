@@ -81,6 +81,10 @@ dependencies {
     //coil
     implementation(libs.coil.network)
     implementation(libs.coil.compose)
+    //test
+    testImplementation(libs.mockk)
+    testImplementation (libs.kotlinx.coroutines.test)
+
 
 
 }
