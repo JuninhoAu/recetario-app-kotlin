@@ -1,4 +1,4 @@
-package com.juni.recetarioapp.view
+package com.juni.recetarioapp.view.recipeitemlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

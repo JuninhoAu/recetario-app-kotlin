@@ -1,4 +1,4 @@
-package com.juni.recetarioapp.view
+package com.juni.recetarioapp.view.onboarding
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

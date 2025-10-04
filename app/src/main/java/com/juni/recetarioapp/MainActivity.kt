@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.juni.recetarioapp.ui.theme.RecetarioAppTheme
-import com.juni.recetarioapp.view.OnboardingViewModel
+import com.juni.recetarioapp.view.onboarding.OnboardingViewModel
 import com.juni.recetarioapp.view.navigation.RecipeListNav
 import dagger.hilt.android.AndroidEntryPoint
 

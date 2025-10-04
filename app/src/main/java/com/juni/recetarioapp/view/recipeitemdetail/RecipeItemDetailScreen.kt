@@ -1,4 +1,4 @@
-package com.juni.recetarioapp.view
+package com.juni.recetarioapp.view.recipeitemdetail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

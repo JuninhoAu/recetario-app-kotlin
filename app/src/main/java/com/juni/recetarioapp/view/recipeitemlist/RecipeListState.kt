@@ -1,4 +1,4 @@
-package com.juni.recetarioapp.view
+package com.juni.recetarioapp.view.recipeitemlist
 
 import com.juni.recetarioapp.utils.error.Failure
 import com.juni.recetarioapp.view.model.RecipeModel
