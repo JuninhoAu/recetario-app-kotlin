@@ -61,8 +61,7 @@ private fun EvaluateStateList(
 
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.LightGray),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
@@ -93,7 +92,6 @@ private fun RecipeListLazyColumn(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.LightGray)
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {

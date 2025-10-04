@@ -1,5 +1,6 @@
 package com.juni.recetarioapp.view.onboarding
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +29,7 @@ import com.juni.recetarioapp.view.model.OnboardingModel
 
 
 @Composable
-fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
+fun OnboardingScreen(modifier: Modifier = Modifier, onFinishOnboarding: () -> Unit) {
 
     val onboardingPagesLists = listOf(
         OnboardingModel("Buscar recetas", "Descubre miles de recetas al instante."),
@@ -38,25 +40,30 @@ fun OnboardingScreen(onFinishOnboarding: () -> Unit) {
 
     val onboardingPage = onboardingPagesLists[pageNumber]
 
-    Column(
-        modifier = Modifier
+    Box(
+        modifier = modifier
             .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
 
-        ShowOnboardingText(onboardingModel = onboardingPage)
-        Spacer(modifier = Modifier.weight(1f))
-        ShowIndicatorPage(onboardingPagesList = onboardingPagesLists, pageNumber = pageNumber)
-        Spacer(modifier = Modifier.padding(8.dp))
-        ShowNextButton(
-            onboardingPagesList = onboardingPagesLists,
-            pageNumber = pageNumber,
-            updatePageNumber = { pageNumber = it },
-            onFinishOnboarding = onFinishOnboarding
-        )
+        ) {
 
+            ShowOnboardingText(onboardingModel = onboardingPage)
+            Spacer(modifier = Modifier.weight(1f))
+            ShowIndicatorPage(onboardingPagesList = onboardingPagesLists, pageNumber = pageNumber)
+            Spacer(modifier = Modifier.padding(8.dp))
+            ShowNextButton(
+                onboardingPagesList = onboardingPagesLists,
+                pageNumber = pageNumber,
+                updatePageNumber = { pageNumber = it },
+                onFinishOnboarding = onFinishOnboarding
+            )
+
+        }
     }
 }
 
@@ -107,10 +114,14 @@ private fun ShowNextButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun OnboardingScreenPreview() {
-    OnboardingScreen(
-        onFinishOnboarding = {}
-    )
+    Scaffold { innerPadding ->
+        OnboardingScreen(
+            modifier = Modifier.padding(innerPadding),
+            onFinishOnboarding = {}
+        )
+    }
+
 }

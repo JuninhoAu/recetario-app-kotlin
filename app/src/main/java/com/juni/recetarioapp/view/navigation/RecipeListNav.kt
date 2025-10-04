@@ -35,10 +35,12 @@ fun RecipeListNav(
         startDestination = starNavigation
     ) {
         composable(route = RecipeScreenRoute.Onboarding.route) {
-            OnboardingScreen {
-                navHostController.navigate(RecipeScreenRoute.List.route) {
-                    onboardingViewModel.completeOnboarding()
-                    popUpTo(route = RecipeScreenRoute.Onboarding.route) { inclusive = true }
+            Scaffold { innerPadding ->
+                OnboardingScreen(modifier = Modifier.padding(innerPadding)) {
+                    navHostController.navigate(RecipeScreenRoute.List.route) {
+                        onboardingViewModel.completeOnboarding()
+                        popUpTo(route = RecipeScreenRoute.Onboarding.route) { inclusive = true }
+                    }
                 }
             }
         }
