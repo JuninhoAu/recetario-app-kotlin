@@ -3,6 +3,7 @@ package com.juni.recetarioapp.data.repository
 import com.juni.recetarioapp.data.mapper.toDomain
 import com.juni.recetarioapp.data.mapper.toEntity
 import com.juni.recetarioapp.data.local.datasource.RecipeLocalDataSource
+import com.juni.recetarioapp.data.local.preferences.UserPreferences
 import com.juni.recetarioapp.data.network.datasource.RecipeRemoteDataSource
 import com.juni.recetarioapp.domain.model.Recipe
 import com.juni.recetarioapp.domain.repository.GetRecipeListRepository
@@ -11,6 +12,7 @@ import com.juni.recetarioapp.utils.error.ResultType
 import com.juni.recetarioapp.utils.error.errorUtilResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 class GetRecipeListRepositoryImpl @Inject constructor(
     private val remoteDataSource: RecipeRemoteDataSource,
-    private val localDataSource: RecipeLocalDataSource
+    private val localDataSource: RecipeLocalDataSource,
+    private val preferencesDataSource: UserPreferences
 ) :
     GetRecipeListRepository {
     override suspend fun getListRecipe(): Flow<ResultType<List<Recipe>, Failure>> = flow {
@@ -29,7 +32,13 @@ class GetRecipeListRepositoryImpl @Inject constructor(
                 val body = response.body()
                 body?.let { recipeListResponse ->
                     if (recipeListResponse.recipeList.isNotEmpty()) {
-                        recipeListResponse.recipeList.map { localDataSource.insertRecipe(it.toEntity()) }
+                        recipeListResponse.recipeList.map {
+                            if (preferencesDataSource.getFavoriteIds().first().contains(it.id)) {
+                                localDataSource.insertRecipe(it.toEntity().copy(favorito = true))
+                            } else {
+                                localDataSource.insertRecipe(it.toEntity())
+                            }
+                        }
                         localDataSource.getRecipeList()
                             .map { list -> list.map { it.toDomain() } }
                             .collect {

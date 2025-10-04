@@ -19,4 +19,7 @@ interface RecipeDao {
     @Update
     suspend fun updateRecipe(recipe: RecipeEntity)
 
+    @Query("SELECT * FROM recipes WHERE favorito = 1 ")
+    fun getAllFavoriteRecipes(): Flow<List<RecipeEntity>>
+
 }
