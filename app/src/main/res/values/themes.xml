@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.RecetarioApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.RecetarioApp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/purple_500</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.RecetarioApp</item>
+    </style>
 </resources>
