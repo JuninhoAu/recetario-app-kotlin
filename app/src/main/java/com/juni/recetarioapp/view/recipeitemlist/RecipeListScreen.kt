@@ -1,21 +1,28 @@
 package com.juni.recetarioapp.view.recipeitemlist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,7 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -49,17 +59,18 @@ fun RecipeListScreen(
         viewModel.showRecipeList()
     }
     Box(modifier = modifier.fillMaxSize()) {
-        EvaluateStateList(listState = recipeList, listViewModel = viewModel) {
-            returnRecipeItem(it)
-        }
+        EvaluateStateList(
+            listState = recipeList,
+            selectRecipeItem = { item -> returnRecipeItem(item) },
+            favoriteRecipeItem = { favorite -> viewModel.addRecipeItemToFav(favorite) })
     }
 }
 
 @Composable
 private fun EvaluateStateList(
     listState: RecipeListState,
-    listViewModel: RecipeListViewModel,
-    returnRecipeItem: (RecipeModel) -> Unit
+    selectRecipeItem: (RecipeModel) -> Unit,
+    favoriteRecipeItem: (RecipeModel) -> Unit
 ) {
     when (listState) {
 
@@ -79,8 +90,8 @@ private fun EvaluateStateList(
         is RecipeListState.Success -> {
             RecipeListLazyColumn(
                 recipeList = listState.recipeList,
-                listViewModel = listViewModel,
-                onItemClick = returnRecipeItem
+                onItemClick = selectRecipeItem,
+                onItemFavorite = favoriteRecipeItem
             )
         }
 
@@ -94,27 +105,42 @@ private fun EvaluateStateList(
 @Composable
 private fun RecipeListLazyColumn(
     recipeList: List<RecipeModel>,
-    listViewModel: RecipeListViewModel,
-    onItemClick: (RecipeModel) -> Unit
+    onItemClick: (RecipeModel) -> Unit,
+    onItemFavorite: (RecipeModel) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        items(recipeList) { recipe ->
-            CardRecipeItem(
-                recipeName = recipe.nombre,
-                recipeDescription = recipe.descripcion,
-                isFavoriteRecipe = recipe.favorito,
-                imageUrl = recipe.imagen,
-                onFavClick = { listViewModel.addRecipeItemToFav(recipe) }
-            ) {
-                onItemClick(recipe)
+    Column(modifier = Modifier.padding(10.dp)) {
+        Text(
+            text = "Recetas",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            text = "Comidas saludables para tu dia a dia",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Light
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(vertical = 16.dp)
+        ) {
+            items(recipeList) { recipe ->
+                CardRecipeItem(
+                    recipeName = recipe.nombre,
+                    recipeDescription = recipe.descripcion,
+                    isFavoriteRecipe = recipe.favorito,
+                    imageUrl = recipe.imagen,
+                    onFavClick = { onItemFavorite(recipe) }
+                ) {
+                    onItemClick(recipe)
+                }
             }
         }
     }
+
 }
 
 @Composable
@@ -132,7 +158,9 @@ private fun CardRecipeItem(
             .fillMaxWidth()
             .clickable {
                 onCardClick()
-            }) {
+            }, colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
         Row(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -144,17 +172,47 @@ private fun CardRecipeItem(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = recipeName, modifier = Modifier.weight(1f))
+                    Text(
+                        text = recipeName,
+                        modifier = Modifier.weight(1f),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                     Icon(
                         imageVector = if (isFavoriteRecipe) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                         tint = if (isFavoriteRecipe) Color.Red else Color.Gray,
                         contentDescription = if (isFavoriteRecipe) "favorite" else "no favorite",
-                        modifier = Modifier.clickable {
-                            onFavClick()
-                        }
+                        modifier = Modifier
+                            .clickable {
+                                onFavClick()
+                            }
+                            .background(Color.Green.copy(0.45f), shape = CircleShape)
+                            .padding(8.dp)
+                            .size(16.dp)
                     )
                 }
-                Text(text = recipeDescription)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        tint = Color(0XFF4CAF20),
+                        contentDescription = "",
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Text(
+                        text = "30 minutos",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = recipeDescription,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Light
+                )
             }
         }
     }
@@ -172,8 +230,30 @@ private fun ShowImage(imageUrl: String) {
             .height(54.dp),
         contentScale = ContentScale.Crop,
         placeholder = painterResource(R.drawable.ic_launcher_background),
-        error = painterResource(R.drawable.ic_launcher_background),
+        error = painterResource(R.drawable.onboarding_icon1),
         contentDescription = "Image item list"
     )
 
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun RecipeListPreviewScreen() {
+    EvaluateStateList(
+        listState = RecipeListState.Success(
+            List(3) {
+                RecipeModel(
+                    id = "12",
+                    nombre = "Papa a la huancaina",
+                    imagen = "R.drawable.plato_s1",
+                    descripcion = "Plato tipico de huancayo",
+                    ingredientes = listOf("ola", "todo bien", "ayuda"),
+                    pasos = listOf("hola", "como estas", "todo bien"),
+                    favorito = false
+                )
+            }
+        ),
+        selectRecipeItem = {},
+        favoriteRecipeItem = {},
+    )
 }
