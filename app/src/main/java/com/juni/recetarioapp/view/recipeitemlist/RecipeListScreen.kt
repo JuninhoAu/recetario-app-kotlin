@@ -230,7 +230,7 @@ private fun ShowImage(imageUrl: String) {
             .height(54.dp),
         contentScale = ContentScale.Crop,
         placeholder = painterResource(R.drawable.ic_launcher_background),
-        error = painterResource(R.drawable.plato_s1),
+        error = painterResource(R.drawable.onboarding_icon1),
         contentDescription = "Image item list"
     )
 

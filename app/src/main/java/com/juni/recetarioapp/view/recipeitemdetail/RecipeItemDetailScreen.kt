@@ -252,7 +252,7 @@ private fun ShowImage(imageUrl: String) {
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(R.drawable.ic_launcher_background),
-            error = painterResource(R.drawable.plato_s1),
+            error = painterResource(R.drawable.onboarding_icon1),
             contentDescription = "Image detail"
         )
 
