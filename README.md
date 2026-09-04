@@ -29,7 +29,7 @@ Una explicacion de como levantar el proyecto con mockmoon para ver su funcionami
  3. **JSON de prueba**
     -En mi caso estoy usando este JSON:
 
-    
+```json    
 {
   "recipeList": [
     {
@@ -241,6 +241,6 @@ Una explicacion de como levantar el proyecto con mockmoon para ver su funcionami
     }
   ]
 }
-
+```
 
 
