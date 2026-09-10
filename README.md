@@ -1,9 +1,28 @@
-## 🔧Levantar el proyecto con Android Studio y el Emulador
+## 🔧App android receta de comidas
 
-Una explicacion de como levantar el proyecto con mockmoon para ver su funcionamiento con datos de prueba.
+
+
+-Onboarding:
+
+<img width="250" height="490" alt="food_app_onboarding_s3" src="https://github.com/user-attachments/assets/8d2fe88a-9753-46c9-83f7-f3ed16b2d6ca" />
+<img width="250" height="490" alt="food_app_onboarding_s2" src="https://github.com/user-attachments/assets/d8702135-ce6e-4237-862b-d0ce1edf80dc" />
+<img width="250" height="490" alt="food_app_onboarding_s1" src="https://github.com/user-attachments/assets/4c92b31b-a008-434e-9186-77b447a63791" />
+<br>
+<br>
+-Lista de recetas:
+<br>
+<br>
+<img width="250" alt="food_app_list" src="https://github.com/user-attachments/assets/dc767a3d-32f1-436d-8160-cc42077e89eb" />
+<br>
+<br>
+-Detalles de cada receta:
+<br>
+<br>
+<img width="250" alt="food_app_detail_list" src="https://github.com/user-attachments/assets/7da57b96-e8a2-4b38-9997-f5e969200d3f" />
+
 
 ### 🛠 Requisitos
-
+Una explicacion de como levantar el proyecto con mockmoon para ver su funcionamiento con datos de prueba.
 - [Mockoon](https://mockoon.com/download/) instalado y corriendo.
 - Android Studio con un emulador configurado.
 - Un smartphone con android.
