@@ -16,25 +16,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
-    private val getGetRecipeListUseCase: GetRecipeListUseCase,
+    private val getRecipeListUseCase: GetRecipeListUseCase,
     private val updateRecipeUseCase: UpdateRecipeUseCase,
 ) : ViewModel() {
 
-    private val _getRecipeList = MutableStateFlow<RecipeListState>(RecipeListState.Idle)
-    val getRecipeList: StateFlow<RecipeListState> = _getRecipeList
+    private val _recipeListState = MutableStateFlow<RecipeListState>(RecipeListState.Idle)
+    val recipeListState: StateFlow<RecipeListState> = _recipeListState
 
-    fun showRecipeList() {
+    fun loadRecipes() {
         viewModelScope.launch {
-            _getRecipeList.value = RecipeListState.Loading
+            _recipeListState.value = RecipeListState.Loading
 
-            getGetRecipeListUseCase.getList().collect { result ->
+            getRecipeListUseCase().collect { result ->
                 when (result) {
                     is ResultType.Error -> {
-                        _getRecipeList.value = RecipeListState.Error(result.error)
+                        _recipeListState.value = RecipeListState.Error(result.error)
                     }
 
                     is ResultType.Success -> {
-                        _getRecipeList.value =
+                        _recipeListState.value =
                             RecipeListState.Success(result.data.map { it.toPresentation() })
                     }
                 }

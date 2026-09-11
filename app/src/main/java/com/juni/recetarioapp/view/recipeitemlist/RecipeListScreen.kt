@@ -53,10 +53,10 @@ fun RecipeListScreen(
     modifier: Modifier = Modifier,
     returnRecipeItem: (RecipeModel) -> Unit
 ) {
-    val recipeList by viewModel.getRecipeList.collectAsState()
+    val recipeList by viewModel.recipeListState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.showRecipeList()
+        viewModel.loadRecipes()
     }
     Box(modifier = modifier.fillMaxSize()) {
         EvaluateStateList(

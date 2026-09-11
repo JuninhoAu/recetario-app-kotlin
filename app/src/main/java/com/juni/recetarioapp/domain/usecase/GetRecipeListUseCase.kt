@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 
 class GetRecipeListUseCase @Inject constructor(private val repository: GetRecipeListRepository) {
-    suspend fun getList(): Flow<ResultType<List<Recipe>, Failure>> {
+    suspend operator fun invoke(): Flow<ResultType<List<Recipe>, Failure>> {
         return repository.getListRecipe()
     }
 }
