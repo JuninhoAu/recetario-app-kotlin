@@ -15,6 +15,10 @@ class RecipeLocalDataSourceImpl @Inject constructor(private val recipeDao: Recip
         recipeDao.insertRecipe(recipe = recipeEntity)
     }
 
+    override suspend fun insertRecipes(recipesListEntity: List<RecipeEntity>) {
+        recipeDao.insertRecipes(recipesListEntity)
+    }
+
     override suspend fun updateRecipe(recipeEntity: RecipeEntity) {
         recipeDao.updateRecipe(recipe = recipeEntity)
     }

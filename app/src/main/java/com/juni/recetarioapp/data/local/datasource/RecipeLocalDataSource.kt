@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface RecipeLocalDataSource {
     fun getRecipeList(): Flow<List<RecipeEntity>>
     suspend fun insertRecipe(recipeEntity: RecipeEntity)
+    suspend fun insertRecipes(recipesListEntity: List<RecipeEntity>)
     suspend fun updateRecipe(recipeEntity: RecipeEntity)
     suspend fun getAllFavorite(): Flow<List<RecipeEntity>>
 }

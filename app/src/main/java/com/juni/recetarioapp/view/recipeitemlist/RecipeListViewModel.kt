@@ -9,6 +9,7 @@ import com.juni.recetarioapp.view.mapper.toDomain
 import com.juni.recetarioapp.view.mapper.toPresentation
 import com.juni.recetarioapp.view.model.RecipeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,8 +25,7 @@ class RecipeListViewModel @Inject constructor(
     val recipeListState: StateFlow<RecipeListState> = _recipeListState
 
     fun loadRecipes() {
-        viewModelScope.launch {
-            _recipeListState.value = RecipeListState.Loading
+        viewModelScope.launch(Dispatchers.Default) {
 
             getRecipeListUseCase().collect { result ->
                 when (result) {
