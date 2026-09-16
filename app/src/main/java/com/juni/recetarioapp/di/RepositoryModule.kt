@@ -5,10 +5,10 @@ import com.juni.recetarioapp.data.local.datasource.RecipeLocalDataSourceImpl
 import com.juni.recetarioapp.data.network.datasource.RecipeRemoteDataSource
 import com.juni.recetarioapp.data.network.datasource.RecipeRemoteDataSourceImpl
 import com.juni.recetarioapp.data.repository.OnboardingRepositoryImpl
-import com.juni.recetarioapp.data.repository.UpdateRecipeRepositoryImpl
+import com.juni.recetarioapp.data.repository.FavoriteRepositoryImpl
 import com.juni.recetarioapp.data.repository.GetRecipeListRepositoryImpl
 import com.juni.recetarioapp.domain.repository.OnboardingRepository
-import com.juni.recetarioapp.domain.repository.UpdateRecipeRepository
+import com.juni.recetarioapp.domain.repository.FavoriteRepository
 import com.juni.recetarioapp.domain.repository.GetRecipeListRepository
 import dagger.Binds
 import dagger.Module
@@ -29,7 +29,7 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun getUpdateRecipeRepository(impl: UpdateRecipeRepositoryImpl): UpdateRecipeRepository
+    abstract fun getUpdateRecipeRepository(impl: FavoriteRepositoryImpl): FavoriteRepository
 
     @Binds
     @Singleton

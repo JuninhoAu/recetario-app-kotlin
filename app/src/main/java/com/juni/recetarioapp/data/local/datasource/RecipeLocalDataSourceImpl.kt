@@ -11,19 +11,15 @@ class RecipeLocalDataSourceImpl @Inject constructor(private val recipeDao: Recip
         return recipeDao.getAllRecipes()
     }
 
-    override suspend fun insertRecipe(recipeEntity: RecipeEntity) {
-        recipeDao.insertRecipe(recipe = recipeEntity)
-    }
-
     override suspend fun insertRecipes(recipesListEntity: List<RecipeEntity>) {
         recipeDao.insertRecipes(recipesListEntity)
     }
 
-    override suspend fun updateRecipe(recipeEntity: RecipeEntity) {
-        recipeDao.updateRecipe(recipe = recipeEntity)
+    override suspend fun updateRecipeFavorite(recipeEntity: RecipeEntity) {
+        recipeDao.updateRecipeFavorite(recipe = recipeEntity)
     }
 
-    override suspend fun getAllFavorite(): Flow<List<RecipeEntity>> {
+    override suspend fun getAllFavorite(): Flow<List<String>> {
         return recipeDao.getAllFavoriteRecipes()
     }
 }

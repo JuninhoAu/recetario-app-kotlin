@@ -14,14 +14,12 @@ interface RecipeDao {
     fun getAllRecipes(): Flow<List<RecipeEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipe(recipe: RecipeEntity)
+    suspend fun insertRecipes(recipes: List<RecipeEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipes(recipes:List<RecipeEntity>)
     @Update
-    suspend fun updateRecipe(recipe: RecipeEntity)
+    suspend fun updateRecipeFavorite(recipe: RecipeEntity)
 
-    @Query("SELECT * FROM recipes WHERE favorito = 1 ")
-    fun getAllFavoriteRecipes(): Flow<List<RecipeEntity>>
+    @Query("SELECT id FROM recipes WHERE favorito = 1 ")
+    fun getAllFavoriteRecipes(): Flow<List<String>>
 
 }

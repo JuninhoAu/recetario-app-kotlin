@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -54,16 +55,13 @@ fun RecipeListScreen(
     modifier: Modifier = Modifier,
     returnRecipeItem: (RecipeModel) -> Unit
 ) {
-    val recipeList by viewModel.recipeListState.collectAsState()
+    val recipeList by viewModel.recipeListState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadRecipes()
-    }
     Box(modifier = modifier.fillMaxSize()) {
         EvaluateStateList(
             listState = recipeList,
             selectRecipeItem = { item -> returnRecipeItem(item) },
-            favoriteRecipeItem = { favorite -> viewModel.addRecipeItemToFav(favorite) })
+            favoriteRecipeItem = { favorite -> viewModel.toggleFavorite(favorite) })
     }
 }
 
