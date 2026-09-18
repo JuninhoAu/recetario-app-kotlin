@@ -8,6 +8,6 @@ import javax.inject.Inject
 class RecipeRemoteDataSourceImpl @Inject constructor(private val listClient: RecipeListClient) :
     RecipeRemoteDataSource {
     override suspend fun getRecipeList(): Response<RecipeListResponse> {
-        return listClient.recipeListClient()
+        return listClient.fetchRecipes()
     }
 }

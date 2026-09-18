@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -53,16 +55,13 @@ fun RecipeListScreen(
     modifier: Modifier = Modifier,
     returnRecipeItem: (RecipeModel) -> Unit
 ) {
-    val recipeList by viewModel.getRecipeList.collectAsState()
+    val recipeList by viewModel.recipeListState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.showRecipeList()
-    }
     Box(modifier = modifier.fillMaxSize()) {
         EvaluateStateList(
             listState = recipeList,
             selectRecipeItem = { item -> returnRecipeItem(item) },
-            favoriteRecipeItem = { favorite -> viewModel.addRecipeItemToFav(favorite) })
+            favoriteRecipeItem = { favorite -> viewModel.toggleFavorite(favorite) })
     }
 }
 
@@ -127,7 +126,7 @@ private fun RecipeListLazyColumn(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            items(recipeList) { recipe ->
+            items(recipeList, key = { it.id }) { recipe ->
                 CardRecipeItem(
                     recipeName = recipe.nombre,
                     recipeDescription = recipe.descripcion,
@@ -220,11 +219,15 @@ private fun CardRecipeItem(
 
 @Composable
 private fun ShowImage(imageUrl: String) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
+    val context = LocalContext.current
+    val imageRequest = remember(imageUrl) {
+        ImageRequest.Builder(context)
             .data(imageUrl)
             .crossfade(true)
-            .build(),
+            .build()
+    }
+    AsyncImage(
+        model = imageRequest,
         modifier = Modifier
             .width(54.dp)
             .height(54.dp),

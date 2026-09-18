@@ -6,5 +6,5 @@ import com.juni.recetarioapp.utils.error.ResultType
 import kotlinx.coroutines.flow.Flow
 
 interface GetRecipeListRepository {
-    suspend fun getListRecipe(): Flow<ResultType<List<Recipe>, Failure>>
+    fun getListRecipe(): Flow<ResultType<List<Recipe>, Failure>>
 }
