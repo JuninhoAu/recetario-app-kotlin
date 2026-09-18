@@ -1,10 +1,12 @@
 package com.juni.recetarioapp.data.repository
 
+import android.util.Log
 import com.juni.recetarioapp.data.mapper.toDomain
 import com.juni.recetarioapp.data.mapper.toEntity
 import com.juni.recetarioapp.data.local.datasource.RecipeLocalDataSource
 import com.juni.recetarioapp.data.local.preferences.UserPreferences
 import com.juni.recetarioapp.data.network.datasource.RecipeRemoteDataSource
+import com.juni.recetarioapp.data.network.model.RecipeResponse
 import com.juni.recetarioapp.domain.model.Recipe
 import com.juni.recetarioapp.domain.repository.GetRecipeListRepository
 import com.juni.recetarioapp.utils.error.Failure
@@ -12,11 +14,10 @@ import com.juni.recetarioapp.utils.error.ResultType
 import com.juni.recetarioapp.utils.error.errorUtilResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 import kotlin.collections.map
 
@@ -28,42 +29,47 @@ class GetRecipeListRepositoryImpl @Inject constructor(
 ) :
     GetRecipeListRepository {
     override fun getListRecipe(): Flow<ResultType<List<Recipe>, Failure>> =
-        getAndSyncRecipes().flowOn(Dispatchers.IO)
+        localDataSource.getRecipeList()
+            .map { entities ->
+                ResultType.Success(entities.map { it.toDomain() })
+            }
+            .onStart { refreshRecipes() }
+            //.flowOn(Dispatchers.IO)
 
 
-    private fun getAndSyncRecipes(): Flow<ResultType<List<Recipe>, Failure>> = flow {
+    suspend fun refreshRecipes() {
+        val result = fetchRemoteRecipes()
+        when (result) {
+            is ResultType.Success -> {
+                val favoriteIds = preferencesDataSource.getFavoriteIds().first()
+                val entities = result.data.map { recipeResponse ->
+                    recipeResponse.toEntity().copy(favorito = recipeResponse.id in favoriteIds)
+                }
+                localDataSource.insertRecipes(entities)
+            }
+
+            is ResultType.Error -> {
+                Log.w("GetRecipeListRepository", "Error refreshing recipes ${result.error}")
+            }
+        }
+    }
+
+    private suspend fun fetchRemoteRecipes(): ResultType<List<RecipeResponse>, Failure> {
         try {
             val response = remoteDataSource.getRecipeList()
 
             if (!response.isSuccessful) {
-                emit(ResultType.Error(Failure.NetworkFailure("response error")))
-                return@flow
+                return ResultType.Error(Failure.NetworkFailure("HTTP error ${response.code()}"))
             }
 
-            response.body()?.let {
-                if (it.recipeList.isEmpty()) {
-                    emit(ResultType.Error(Failure.ApiFailure("body is empty")))
-                    return@flow
-                }
-                val favoriteIds = preferencesDataSource.getFavoriteIds().first()
+            val recipes =
+                response.body()?.recipeList
+                    ?: return ResultType.Error(Failure.ApiFailure("response body is null"))
 
-                val entities = it.recipeList.map { recipeResponse ->
-                    recipeResponse.toEntity().copy(favorito = recipeResponse.id in favoriteIds)
-                }
-
-                localDataSource.insertRecipes(entities)
-
-            } ?: run {
-                emit(ResultType.Error(Failure.ApiFailure("body is null")))
-                return@flow
-            }
-
-            emitAll(localDataSource.getRecipeList().map {
-                ResultType.Success(it.map { recipeEntity -> recipeEntity.toDomain() })
-            })
+            return ResultType.Success(recipes)
 
         } catch (t: Throwable) {
-            emit(ResultType.Error(errorUtilResponse.errorHandler(t)))
+            return ResultType.Error(errorUtilResponse.errorHandler(t))
         }
     }
 }

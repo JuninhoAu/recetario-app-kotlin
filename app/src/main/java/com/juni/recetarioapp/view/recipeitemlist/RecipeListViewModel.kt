@@ -53,7 +53,7 @@ class RecipeListViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = RecipeListState.Idle
+            initialValue = RecipeListState.Loading
         )
 
     fun toggleFavorite(recipe: RecipeModel) {
