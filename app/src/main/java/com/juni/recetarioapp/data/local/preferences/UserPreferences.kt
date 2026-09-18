@@ -39,9 +39,10 @@ class UserPreferences @Inject constructor(@ApplicationContext context: Context) 
     fun getFavoriteIds(): Flow<Set<String>> =
         dataStore.data.map { it[FAVORITES_RECIPES] ?: emptySet() }
 
-    suspend fun addFavoriteId(recipesId: Set<String>) {
+    suspend fun addFavoriteId(recipeId: String) {
         dataStore.edit { prefs ->
-            prefs[FAVORITES_RECIPES] = recipesId
+            val current = prefs[FAVORITES_RECIPES] ?: emptySet()
+            prefs[FAVORITES_RECIPES] = current + recipeId
         }
     }
 

@@ -4,22 +4,20 @@ import com.juni.recetarioapp.data.local.datasource.RecipeLocalDataSource
 import com.juni.recetarioapp.data.local.preferences.UserPreferences
 import com.juni.recetarioapp.data.mapper.toEntity
 import com.juni.recetarioapp.domain.model.Recipe
-import com.juni.recetarioapp.domain.repository.UpdateRecipeRepository
-import kotlinx.coroutines.flow.first
+import com.juni.recetarioapp.domain.repository.FavoriteRepository
 import javax.inject.Inject
 
-class UpdateRecipeRepositoryImpl @Inject constructor(
+class FavoriteRepositoryImpl @Inject constructor(
     private val localDataSource: RecipeLocalDataSource,
     private val userPreferences: UserPreferences
-) : UpdateRecipeRepository {
+) : FavoriteRepository {
 
-    override suspend fun updateRecipe(recipe: Recipe) {
-        localDataSource.updateRecipe(recipeEntity = recipe.toEntity())
+    override suspend fun toggleFavorite(recipe: Recipe) {
+        localDataSource.updateRecipeFavorite(recipeEntity = recipe.toEntity())
         if (!recipe.favorito) {
             userPreferences.removeFavoriteId(recipeId = recipe.id)
         } else {
-            val favListIdLocal = localDataSource.getAllFavorite().first().map { it.id }.toSet()
-            userPreferences.addFavoriteId(recipesId = favListIdLocal)
+            userPreferences.addFavoriteId(recipeId = recipe.id)
         }
     }
 }
